@@ -48,13 +48,10 @@ def gen_matrix(key: str) -> list[list[int]]:
             else:
                 key_arr.append(char)
 
-    """
-    filling the remaining key array with rest of unused
-    letters from the English alphabet.
+    # filling the remaining key array with rest of unused
+    # letters from the English alphabet.
 
-    """
-
-    is_I_exist: bool = "I" in key_arr
+    is_i_exist: bool = "I" in key_arr
 
     # A-Z's ASCII Value lies between 65 to 90 but as range's
     # second parameter excludes that value we will use 65 to 91
@@ -65,12 +62,12 @@ def gen_matrix(key: str) -> list[list[int]]:
             # J = 74
             # We want I in key_arr not J
 
-            if i == 73 and not is_I_exist:
+            if i == 73 and not is_i_exist:
 
                 key_arr.append("I")
-                is_I_exist = True
+                is_i_exist = True
 
-            elif i == 73 or i == 74 and is_I_exist:
+            elif i == 73 or i == 74 and is_i_exist:
                 pass
 
             else:
@@ -88,6 +85,10 @@ def gen_matrix(key: str) -> list[list[int]]:
 
 
 def index_locator(char: str, cipherkey_matrix: list) -> list[int]:
+    """
+    returns the index of the character in the cipherkey_matrix.
+
+    """
     char_index = []
 
     # convert the character value from J to I
@@ -96,13 +97,13 @@ def index_locator(char: str, cipherkey_matrix: list) -> list[int]:
 
     for i, j in enumerate(cipherkey_matrix):
 
-        for k, l in enumerate(j):
-            if char == l:
+        for key, value in enumerate(j):
+            if char == value:
 
                 char_index.append(i)
                 # add 1st dimension of 5X5 matrix => i.e., char_index = [i]
 
-                char_index.append(k)
+                char_index.append(key)
                 # add 2nd dimension of 5X5 matrix => i.e., char_index = [i,k]
 
             # Now with the help of char_index = [i,k]
@@ -113,75 +114,80 @@ def index_locator(char: str, cipherkey_matrix: list) -> list[int]:
 
 
 def encryption(plain_text: str, key: str) -> list[str]:
+    """
+    Encrypts the plain_text using the key
+    and returns the cipher_text.
+    """
     cipher_text: list = []
 
     # generate key matrix
     key_matrix: list[list[int]] = gen_matrix(key)
 
-    i: int = 0
+    integer: int = 0
 
     # encrypt according to rules of playfair cipher
 
-    while i < len(plain_text):
+    while integer < len(plain_text):
         # calculate two grouped characters indexes from key_matrix
 
-        n1 = index_locator(plain_text[i], key_matrix)
-        n2 = index_locator(plain_text[i+1], key_matrix)
+        first_value = index_locator(plain_text[integer], key_matrix)
+        second_value = index_locator(plain_text[integer+1], key_matrix)
 
         # if same column then look in below row so
         # format is [row,col]
         # now to see below row => increase the row in both item
-        # (n1[0]+1,n1[1]) => (3+1,1) => (4,1)
+        # (first_value[0]+1,first_value[1]) => (3+1,1) => (4,1)
 
-        # (n2[0]+1,n2[1]) => (4+1,1) => (5,1)
+        # (second_value[0]+1,second_value[1]) => (4+1,1) => (5,1)
 
         # but in our matrix we have 0 to 4 indexes only
         # so to make value bound under 0 to 4 we will do %5
         #
-        #   (n1[0]+1 % 5,n1[1])
-        #   (n2[0]+1 % 5,n2[1])
+        #   (first_value[0]+1 % 5,first_value[1])
+        #   (second_value[0]+1 % 5,second_value[1])
 
-        if n1[1] == n2[1]:
-            i1 = (n1[0] + 1) % 5
-            j1 = n1[1]
+        if first_value[1] == second_value[1]:
+            int_one = (first_value[0] + 1) % 5
+            value_one = first_value[1]
 
-            i2 = (n2[0] + 1) % 5
-            j2 = n2[1]
-            cipher_text.append(key_matrix[i1][j1])
-            cipher_text.append(key_matrix[i2][j2])
+            int_two = (second_value[0] + 1) % 5
+            value_two = second_value[1]
+            cipher_text.append(key_matrix[int_one][value_one])
+            cipher_text.append(key_matrix[int_two][value_two])
             # cipher_text.append(", ")
 
         # same row
-        elif n1[0] == n2[0]:
-            i1 = n1[0]
-            j1 = (n1[1] + 1) % 5
+        elif first_value[0] == second_value[0]:
+            int_one = first_value[0]
+            value_one = (first_value[1] + 1) % 5
 
-            i2 = n2[0]
-            j2 = (n2[1] + 1) % 5
-            cipher_text.append(key_matrix[i1][j1])
-            cipher_text.append(key_matrix[i2][j2])
+            int_two = second_value[0]
+            value_two = (second_value[1] + 1) % 5
+            cipher_text.append(key_matrix[int_one][value_one])
+            cipher_text.append(key_matrix[int_two][value_two])
             # cipher_text.append(", ")
 
         # if making rectangle then
         # [4,3] [1,2] => [4,2] [3,1]
         # exchange columns of both value
         else:
-            i1 = n1[0]
-            j1 = n1[1]
+            int_one = first_value[0]
+            value_one = first_value[1]
 
-            i2 = n2[0]
-            j2 = n2[1]
+            int_two = second_value[0]
+            value_two = second_value[1]
 
-            cipher_text.append(key_matrix[i1][j2])
-            cipher_text.append(key_matrix[i2][j1])
+            cipher_text.append(key_matrix[int_one][value_two])
+            cipher_text.append(key_matrix[int_two][value_one])
             # cipher_text.append(", ")
 
-        i += 2
+        integer += 2
 
     return cipher_text
 
 
 def main() -> None:
+    """Main function"""
 
     while True:
         # will keep on getting user inputs until a user

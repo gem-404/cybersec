@@ -4,14 +4,14 @@ A program that decrypts a message encoded in the
 caesars cypher.
 """
 
-encrypted_msg1 = """
+ENCRYPTED_MSG1 = """
 vjg ugetgvu hqt dgkpi iqqf cv etarvqitcrja ku vq rtcvkeg cp kpetgfkdng
 coqwpv qh jqwtu"""
 
-encrypted_msg2 = """vtblqj ghfubswlqj brxu rzq fbskhuwhaw zlwk udqgrp
+ENCRYPTED_MSG2 = """vtblqj ghfubswlqj brxu rzq fbskhuwhaw zlwk udqgrp
 qxpehuv dv nhbv. brx frxog xvh udqgrp nhb"""
 
-encrypted_msg3 = """bzizmvodji vgbjmdochn. oj wz xjindyzmzy vn v hvnozm,
+ENCRYPTED_MSG3 = """bzizmvodji vgbjmdochn. oj wz xjindyzmzy vn v hvnozm,
 v ojovg ja 10000 cjpmn dn mzlpdmzy.
 """
 
@@ -58,9 +58,9 @@ def read_string(words: str, num: int) -> str:
 def main():
     """Testing the functionality of the above functions."""
 
-    msg1 = read_string(encrypted_msg1, 28)
-    msg2 = read_string(encrypted_msg2, 3)
-    msg3 = read_string(encrypted_msg3, 99)
+    msg1 = read_string(ENCRYPTED_MSG1, 28)
+    msg2 = read_string(ENCRYPTED_MSG2, 3)
+    msg3 = read_string(ENCRYPTED_MSG3, 99)
 
     print(f"{msg1} {msg2} {msg3}")
 
